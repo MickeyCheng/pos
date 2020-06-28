@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import net.proteanit.sql.DbUtils;
@@ -40,7 +41,7 @@ String getProdId;
     }
     private void listenSearch(){
         try{
-            String searchSQL = "Select * from tblProduct where productId like? OR productName like?";
+            String searchSQL = "Select * from tblwrs_product where product_id like? OR product_name like?";
             pstmt = conn.prepareStatement(searchSQL);
             pstmt.setString(1, "%"+txtSearch.getText()+"%");
             pstmt.setString(2, "%"+txtSearch.getText()+"%");
@@ -54,7 +55,7 @@ String getProdId;
        }
     private void fillTable(){
         try{
-            pstmt = conn.prepareStatement("Select * from tblProduct order by category");
+            pstmt = conn.prepareStatement("Select * from tblwrs_product order by product_name");
             rs = pstmt.executeQuery();
             tableProduct.setModel(DbUtils.resultSetToTableModel(rs));
             sortTable();
@@ -63,13 +64,21 @@ String getProdId;
         }
     }
     private void sortTable(){
-        tableProduct.getColumnModel().getColumn(0).setHeaderValue("BARCODE");
+        tableProduct.getColumnModel().getColumn(0).setHeaderValue("ID");
         tableProduct.getColumnModel().getColumn(1).setHeaderValue("NAME");
-        tableProduct.getColumnModel().getColumn(2).setHeaderValue("U/PRICE");
-        tableProduct.getColumnModel().getColumn(3).setHeaderValue("CATEGORY");
-        tableProduct.getColumnModel().getColumn(4).setHeaderValue("SOH");
-        tableProduct.getColumnModel().getColumn(5).setHeaderValue("MIN LEVEL");
-        tableProduct.getColumnModel().getColumn(6).setHeaderValue("MAX LEVEL");
+        tableProduct.getColumnModel().getColumn(2).setHeaderValue("PRICE");
+        tableProduct.getColumnModel().getColumn(3).setHeaderValue("QOH");
+        tableProduct.getColumnModel().getColumn(4).setHeaderValue("MIN");
+        tableProduct.getColumnModel().getColumn(5).setHeaderValue("MAX");
+        
+        tableProduct.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tableProduct.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tableProduct.getColumnModel().getColumn(2).setPreferredWidth(50);
+        tableProduct.getColumnModel().getColumn(3).setPreferredWidth(50);
+        tableProduct.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tableProduct.getColumnModel().getColumn(5).setPreferredWidth(50);
+        tableProduct.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+ 
     }
 private void doConnect(){
 try{
@@ -93,14 +102,12 @@ try{
         tableProduct = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         lblStock = new javax.swing.JLabel();
         lblProdName = new javax.swing.JLabel();
         lblPrice = new javax.swing.JLabel();
-        lblCategory = new javax.swing.JLabel();
         lblProdId = new javax.swing.JLabel();
         cmbAdjust = new javax.swing.JComboBox();
         jLabel9 = new javax.swing.JLabel();
@@ -148,11 +155,6 @@ try{
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("CATEGORY");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 110, 40));
-
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -161,12 +163,12 @@ try{
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel11.setText("UNIT PRICE:");
+        jLabel11.setText("Unit Price:");
         jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 110, 40));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText("NAME:");
+        jLabel12.setText("Name:");
         jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 110, 40));
 
         lblStock.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -183,11 +185,6 @@ try{
         lblPrice.setForeground(new java.awt.Color(255, 255, 255));
         lblPrice.setText("UNIT PRICE:");
         jPanel3.add(lblPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, 220, 40));
-
-        lblCategory.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lblCategory.setForeground(new java.awt.Color(255, 255, 255));
-        lblCategory.setText("CATEGORY");
-        jPanel3.add(lblCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 190, 220, 40));
 
         lblProdId.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblProdId.setForeground(new java.awt.Color(255, 255, 255));
@@ -227,7 +224,7 @@ try{
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("BARCODE:");
+        jLabel5.setText("ID:");
         jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 110, 40));
 
         jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 700, 240));
@@ -274,17 +271,16 @@ try{
         int row = tableProduct.getSelectedRow();
         int ba = tableProduct.convertRowIndexToModel(row);
         String tblClick = (tableProduct.getModel().getValueAt(ba, 0).toString());
-        String selectedItem = "Select * from tblProduct where productId =?";
+        String selectedItem = "Select * from tblwrs_product where product_id =?";
         try{
             pstmt = conn.prepareStatement(selectedItem);
             pstmt.setString(1, tblClick);
             rs = pstmt.executeQuery();
             if (rs.next()){
-                lblProdId.setText(rs.getString("productId"));
-                lblProdName.setText(rs.getString("productName"));
-                lblPrice.setText(rs.getString("unitPrice"));
-                lblCategory.setText(rs.getString("category"));
-                lblStock.setText(String.valueOf(rs.getInt("stockOnHand")));
+                lblProdId.setText(rs.getString("product_id"));
+                lblProdName.setText(rs.getString("product_name"));
+                lblPrice.setText(rs.getString("product_price"));
+                lblStock.setText(String.valueOf(rs.getInt("product_qoh")));
                 getProdId = tblClick;
             }
             pstmt.close();
@@ -296,22 +292,22 @@ try{
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try{
             if (lblStock.getText().equals("0")){
-                String adjustSQL = "UPDATE tblProduct set stockOnhand=? where productId=?";
+                String adjustSQL = "UPDATE tblwrs_product set product_qoh=? where product_id=?";
                 pstmt = conn.prepareStatement(adjustSQL);
                 pstmt.setString(1,cmbAdjust.getSelectedItem().toString());
-                pstmt.setString(2, getProdId);
+                pstmt.setString(2, lblProdId.getText());
             }else{
-                String adjustSQL = "UPDATE tblProduct set stockOnhand=stockOnHand+? where productId=?";
+                String adjustSQL = "UPDATE tblwrs_product set product_qoh=product_qoh+? where product_id=?";
                 pstmt = conn.prepareStatement(adjustSQL);
                 pstmt.setString(1,cmbAdjust.getSelectedItem().toString());
-                pstmt.setString(2, getProdId);
+                pstmt.setString(2, lblProdId.getText());
             }
             pstmt.executeUpdate();
             pstmt.close();
             JOptionPane.showMessageDialog(this, "QTY ADJUSTED");
             listenSearch();
         }catch(SQLException e){
-            e.getMessage();
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -324,7 +320,7 @@ try{
                 if (Integer.valueOf(lblStock.getText()) < Integer.valueOf(setStock)){
                     JOptionPane.showMessageDialog(this, "WILL RESULT TO NEGATIVE QTY","NEGATIVE",JOptionPane.ERROR_MESSAGE);
                 }else{
-                String adjustSQL = "UPDATE tblProduct set stockOnhand=stockOnHand-? where productId=?";
+                String adjustSQL = "UPDATE tblwrs_product set product_qoh=product_qoh-? where product_id=?";
                     pstmt = conn.prepareStatement(adjustSQL);
                     pstmt.setString(1,setStock);
                     pstmt.setString(2, getProdId);
@@ -340,7 +336,8 @@ try{
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-fillTable();
+        fillTable();
+        txtSearch.setText("");
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -402,7 +399,6 @@ fillTable();
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
@@ -413,7 +409,6 @@ fillTable();
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblCategory;
     private javax.swing.JLabel lblPrice;
     private javax.swing.JLabel lblProdId;
     private javax.swing.JLabel lblProdName;
