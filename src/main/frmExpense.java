@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
@@ -23,6 +24,7 @@ String getSelectedID;
         clearTexts();
         lockTexts();
         fillTable();
+        fillStatusCombo();
         setLocationRelativeTo(null);
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -34,13 +36,18 @@ String getSelectedID;
             public void changedUpdate(DocumentEvent e) {listenSearch();}
         });
     }
+    
+ private void fillStatusCombo(){
+     cmbStatus.removeAllItems();
+     cmbStatus.addItem("Pending");
+     cmbStatus.addItem("Approved");
+     cmbStatus.addItem("Rejected");
+ }   
 private void listenSearch(){
     try{
-        String searchSQL = "Select * from tblcustomer where customer_name like? OR customer_address like? OR customer_contact like?";
+        String searchSQL = "Select * from tblexpense where expense_name like?";
         pstmt = conn.prepareStatement(searchSQL);
         pstmt.setString(1,"%"+txtSearch.getText()+"%");
-        pstmt.setString(2,"%"+txtSearch.getText()+"%");
-        pstmt.setString(3,"%"+txtSearch.getText()+"%");
         rs = pstmt.executeQuery();
         tblcustomer.setModel(DbUtils.resultSetToTableModel(rs));
     }catch(SQLException e){
@@ -50,18 +57,18 @@ private void listenSearch(){
 private void sortTable(){
     tblcustomer.getColumnModel().getColumn(0).setHeaderValue("ID");
     tblcustomer.getColumnModel().getColumn(1).setHeaderValue("Name");
-    tblcustomer.getColumnModel().getColumn(2).setHeaderValue("Address");
-    tblcustomer.getColumnModel().getColumn(3).setHeaderValue("Contact Details");
+    tblcustomer.getColumnModel().getColumn(2).setHeaderValue("Amount");
+    tblcustomer.getColumnModel().getColumn(3).setHeaderValue("Status");
     
     tblcustomer.getColumnModel().getColumn(0).setPreferredWidth(25);
-    tblcustomer.getColumnModel().getColumn(1).setPreferredWidth(100);
-    tblcustomer.getColumnModel().getColumn(2).setPreferredWidth(250);
-    tblcustomer.getColumnModel().getColumn(3).setPreferredWidth(100);
+    tblcustomer.getColumnModel().getColumn(1).setPreferredWidth(150);
+    tblcustomer.getColumnModel().getColumn(2).setPreferredWidth(150);
+    tblcustomer.getColumnModel().getColumn(3).setPreferredWidth(150);
     tblcustomer.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 }
 private void fillTable(){
     try{
-        String fillTable = "Select * from tblcustomer";
+        String fillTable = "Select * from tblexpense";
         pstmt = conn.prepareStatement(fillTable);
         rs = pstmt.executeQuery();
         tblcustomer.setModel(DbUtils.resultSetToTableModel(rs));
@@ -73,21 +80,24 @@ private void fillTable(){
 }    
  
 private void unlockTexts(){
-    txtContact.setEnabled(true);
-    txtCustomerAddress.setEnabled(true);
-    txtCustomerName.setEnabled(true);
+
+    txtExpenseAmount.setEnabled(true);
+    txtExpenseName.setEnabled(true);
+    cmbStatus.setEnabled(true);
+    dateExpense.setEnabled(true);
    
 }    
 private void lockTexts(){
-    txtContact.setEnabled(false);
-    txtCustomerAddress.setEnabled(false);
-    txtCustomerName.setEnabled(false);
-   
+    txtExpenseAmount.setEnabled(false);
+    txtExpenseName.setEnabled(false);
+    cmbStatus.setEnabled(false);
+    dateExpense.setEnabled(false);
 }    
 private void clearTexts(){
-    txtContact.setText("");
-    txtCustomerName.setText("");
-    txtCustomerAddress.setText("");
+    txtExpenseName.setText("");
+    txtExpenseAmount.setText("");
+    cmbStatus.setSelectedIndex(-1);
+    dateExpense.setDate(new Date());
 }    
 private void doConnect(){
 try{
@@ -115,9 +125,8 @@ try{
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        txtContact = new javax.swing.JTextField();
-        txtCustomerName = new javax.swing.JTextField();
-        txtCustomerAddress = new javax.swing.JTextField();
+        txtExpenseName = new javax.swing.JTextField();
+        txtExpenseAmount = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
@@ -125,6 +134,9 @@ try{
         btnDelete = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        dateExpense = new com.toedter.calendar.JDateChooser();
+        cmbStatus = new javax.swing.JComboBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -175,33 +187,32 @@ try{
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Address:");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, 50));
-        jPanel2.add(txtContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 330, 50));
+        jLabel3.setText("Expense Amount:");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 130, 50));
 
-        txtCustomerName.setNextFocusableComponent(txtCustomerAddress);
-        jPanel2.add(txtCustomerName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 330, 50));
-        jPanel2.add(txtCustomerAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 330, 50));
+        txtExpenseName.setNextFocusableComponent(txtExpenseAmount);
+        jPanel2.add(txtExpenseName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 330, 50));
+        jPanel2.add(txtExpenseAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 150, 330, 50));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Contact Details:");
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 130, 50));
+        jLabel4.setText("Status:");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 130, 50));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Customer Name:");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 130, 50));
+        jLabel5.setText("Expense Name:");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, 50));
 
         btnAdd.setText("ADD");
         btnAdd.setFocusCycleRoot(true);
-        btnAdd.setNextFocusableComponent(txtCustomerName);
+        btnAdd.setNextFocusableComponent(txtExpenseName);
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
-        jPanel2.add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 220, 60, 50));
+        jPanel2.add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 320, 60, 50));
 
         btnEdit.setText("EDIT");
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
@@ -209,7 +220,7 @@ try{
                 btnEditActionPerformed(evt);
             }
         });
-        jPanel2.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 220, 60, 50));
+        jPanel2.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 320, 60, 50));
 
         btnDelete.setText("DELETE");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -217,7 +228,7 @@ try{
                 btnDeleteActionPerformed(evt);
             }
         });
-        jPanel2.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 290, 70, 20));
+        jPanel2.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 70, 20));
 
         btnSave.setText("SAVE");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -225,10 +236,19 @@ try{
                 btnSaveActionPerformed(evt);
             }
         });
-        jPanel2.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 220, 60, 50));
+        jPanel2.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 320, 60, 50));
 
         btnCancel.setText("CANCEL");
-        jPanel2.add(btnCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 290, 70, 20));
+        jPanel2.add(btnCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 390, 70, 20));
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Expense Date:");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 120, 20));
+        jPanel2.add(dateExpense, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 120, -1));
+
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel2.add(cmbStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 230, 330, -1));
 
         jPanel4.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 90, 500, 430));
 
@@ -277,7 +297,7 @@ try{
         edit = false;
         unlockTexts();
         clearTexts();
-        txtCustomerName.requestFocus();
+        txtExpenseName.requestFocus();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
@@ -290,14 +310,14 @@ try{
         
         if (add == true && edit ==false){
             try{
-                String insertSQLQuery = "INSERT INTO tblcustomer (customer_name,customer_address,customer_contact) "
+                String insertSQLQuery = "INSERT INTO tblexpense (expense_name,expense_amount,expense_status) "
                         + "values (?,?,?)";
                 pstmt = conn.prepareStatement(insertSQLQuery);
-                pstmt.setString(1,txtCustomerName.getText());
-                pstmt.setString(2,txtCustomerAddress.getText());
-                pstmt.setString(3, txtContact.getText());
+                pstmt.setString(1,txtExpenseName.getText());
+                pstmt.setDouble(2,Double.parseDouble(txtExpenseAmount.getText()));
+                pstmt.setString(3, cmbStatus.getSelectedItem().toString());
                 pstmt.execute();
-                JOptionPane.showMessageDialog(this, "Customer Added");
+                JOptionPane.showMessageDialog(this, "Expense Added");
                 pstmt.close();
                 fillTable();
                 clearTexts();
@@ -307,14 +327,14 @@ try{
             }
         }else if (add == false && edit == true){
             try{
-                String updateTblCustomer = "UPDATE tblcustomer set customer_name=?,customer_address=?,customer_contact=? where customer_id=?";
+                String updateTblCustomer = "UPDATE tblexpense set expense_name=?,expense_amount=?,expense_status=? where expense_id=?";
                 pstmt = conn.prepareStatement(updateTblCustomer);
-                pstmt.setString(1,txtCustomerName.getText());
-                pstmt.setString(2,txtCustomerAddress.getText());
-                pstmt.setString(3, txtContact.getText());           
+                pstmt.setString(1,txtExpenseName.getText());
+                pstmt.setDouble(2,Double.parseDouble(txtExpenseAmount.getText()));
+                pstmt.setString(3, cmbStatus.getSelectedItem().toString());    
                 pstmt.setString(4, getSelectedID);
                 pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Customer details updated");
+                JOptionPane.showMessageDialog(this, "Expense details updated");
                 pstmt.close();
                 fillTable();
                 clearTexts();
@@ -331,18 +351,18 @@ try{
         int ba = tblcustomer.convertRowIndexToModel(row);
         try{
             String tblClick = (tblcustomer.getModel().getValueAt(ba, 0).toString());
-            String tableQuery = "Select * from tblcustomer where customer_id=?";
+            String tableQuery = "Select * from tblexpense where expense_id=?";
             pstmt = conn.prepareStatement(tableQuery);
             pstmt.setString(1, tblClick);
             rs = pstmt.executeQuery();
             if (rs.next()){
-                txtCustomerAddress.setText(rs.getString("customer_address"));
-                txtCustomerName.setText(rs.getString("customer_name"));
-                txtContact.setText(rs.getString("customer_contact"));
-                getSelectedID= rs.getString("customer_id");
+                txtExpenseAmount.setText(rs.getString("expense_amount"));
+                txtExpenseName.setText(rs.getString("expense_name"));
+                cmbStatus.setSelectedItem(rs.getString("expense_status"));
+                getSelectedID= rs.getString("expense_id");
             }
         }catch(SQLException e){
-            e.getMessage();
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_tblcustomerMouseClicked
 
@@ -366,11 +386,13 @@ try{
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        
+        /*
         int itemSelected = JOptionPane.showConfirmDialog(this, "DELETE RECORD?","DELETE",JOptionPane.YES_NO_OPTION);
         if (itemSelected==JOptionPane.YES_OPTION){
             try{
                 pstmt = conn.prepareStatement("DELETE FROM tblProduct where productId=?");
-                pstmt.setString(1,txtCustomerName.getText());
+                pstmt.setString(1,txtExpenseName.getText());
                 pstmt.executeUpdate();
                 pstmt.close();
                 JOptionPane.showMessageDialog(this, "RECORD DELETED");
@@ -380,6 +402,7 @@ try{
                 e.getMessage();
             }
         }
+        */
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
@@ -426,10 +449,13 @@ try{
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox cmbStatus;
+    private com.toedter.calendar.JDateChooser dateExpense;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -441,9 +467,8 @@ try{
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblcustomer;
-    private javax.swing.JTextField txtContact;
-    private javax.swing.JTextField txtCustomerAddress;
-    private javax.swing.JTextField txtCustomerName;
+    private javax.swing.JTextField txtExpenseAmount;
+    private javax.swing.JTextField txtExpenseName;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }
