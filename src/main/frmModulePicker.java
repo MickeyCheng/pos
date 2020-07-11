@@ -37,6 +37,8 @@ public class frmModulePicker extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         btnCustomer = new javax.swing.JButton();
+        btnExpense = new javax.swing.JButton();
+        btnNetSales = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -108,6 +110,22 @@ public class frmModulePicker extends javax.swing.JFrame {
         });
         jPanel1.add(btnCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 180, 140, 110));
 
+        btnExpense.setText("Expense");
+        btnExpense.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExpenseActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnExpense, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 330, -1, -1));
+
+        btnNetSales.setText("Sales/Expense");
+        btnNetSales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNetSalesActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnNetSales, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 330, -1, -1));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 680, 390));
 
         pack();
@@ -161,6 +179,18 @@ public class frmModulePicker extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCustomerActionPerformed
 
+    private void btnExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpenseActionPerformed
+        frmExpense obj = new frmExpense();
+        obj.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnExpenseActionPerformed
+
+    private void btnNetSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNetSalesActionPerformed
+        frmSalesExpense obj = new frmSalesExpense();
+        obj.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnNetSalesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -198,6 +228,8 @@ public class frmModulePicker extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCustomer;
+    private javax.swing.JButton btnExpense;
+    private javax.swing.JButton btnNetSales;
     private javax.swing.JButton btnProductControl;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;

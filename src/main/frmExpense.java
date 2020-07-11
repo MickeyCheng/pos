@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -18,6 +20,7 @@ Connection conn;
 PreparedStatement pstmt;
 boolean add,edit;
 String getSelectedID;
+DateFormat df=new SimpleDateFormat("dd/M/yyyy");
     public frmExpense() {
         initComponents();
         doConnect();
@@ -59,11 +62,13 @@ private void sortTable(){
     tblcustomer.getColumnModel().getColumn(1).setHeaderValue("Name");
     tblcustomer.getColumnModel().getColumn(2).setHeaderValue("Amount");
     tblcustomer.getColumnModel().getColumn(3).setHeaderValue("Status");
+    tblcustomer.getColumnModel().getColumn(4).setHeaderValue("Date");
     
     tblcustomer.getColumnModel().getColumn(0).setPreferredWidth(25);
     tblcustomer.getColumnModel().getColumn(1).setPreferredWidth(150);
     tblcustomer.getColumnModel().getColumn(2).setPreferredWidth(150);
     tblcustomer.getColumnModel().getColumn(3).setPreferredWidth(150);
+    tblcustomer.getColumnModel().getColumn(4).setPreferredWidth(150);
     tblcustomer.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 }
 private void fillTable(){
@@ -310,12 +315,13 @@ try{
         
         if (add == true && edit ==false){
             try{
-                String insertSQLQuery = "INSERT INTO tblexpense (expense_name,expense_amount,expense_status) "
-                        + "values (?,?,?)";
+                String insertSQLQuery = "INSERT INTO tblexpense (expense_name,expense_amount,expense_status,expense_date) "
+                        + "values (?,?,?,?)";
                 pstmt = conn.prepareStatement(insertSQLQuery);
                 pstmt.setString(1,txtExpenseName.getText());
                 pstmt.setDouble(2,Double.parseDouble(txtExpenseAmount.getText()));
                 pstmt.setString(3, cmbStatus.getSelectedItem().toString());
+                pstmt.setString(4, df.format(dateExpense.getDate()));
                 pstmt.execute();
                 JOptionPane.showMessageDialog(this, "Expense Added");
                 pstmt.close();
@@ -327,12 +333,13 @@ try{
             }
         }else if (add == false && edit == true){
             try{
-                String updateTblCustomer = "UPDATE tblexpense set expense_name=?,expense_amount=?,expense_status=? where expense_id=?";
+                String updateTblCustomer = "UPDATE tblexpense set expense_name=?,expense_amount=?,expense_status=?,expense_date where expense_id=?";
                 pstmt = conn.prepareStatement(updateTblCustomer);
                 pstmt.setString(1,txtExpenseName.getText());
                 pstmt.setDouble(2,Double.parseDouble(txtExpenseAmount.getText()));
-                pstmt.setString(3, cmbStatus.getSelectedItem().toString());    
-                pstmt.setString(4, getSelectedID);
+                pstmt.setString(3, cmbStatus.getSelectedItem().toString());
+                pstmt.setString(4, df.format(dateExpense.getDate()));
+                pstmt.setString(5, getSelectedID);
                 pstmt.executeUpdate();
                 JOptionPane.showMessageDialog(this, "Expense details updated");
                 pstmt.close();
