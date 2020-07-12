@@ -27,7 +27,7 @@ ResultSet rs;
 Connection conn;
 PreparedStatement pstmt;
 String getTransactionId;
-DecimalFormat df = new DecimalFormat("#.000");
+DecimalFormat df = new DecimalFormat("#.00");
 SimpleDateFormat tdf = new SimpleDateFormat("dd/M/YYYY");
 
     public frmReceiptTable() {
@@ -41,7 +41,7 @@ SimpleDateFormat tdf = new SimpleDateFormat("dd/M/YYYY");
         model.setRowCount(0);
     try{
         int i=0;
-        String fillStockSQL = "Select productName,stockOnHand from tblProduct order by productName";
+        String fillStockSQL = "Select product_name,product_qoh from tblwrs_product order by product_name";
         pstmt = conn.prepareStatement(fillStockSQL);
         rs = pstmt.executeQuery();
         while (rs.next()){
@@ -49,7 +49,7 @@ SimpleDateFormat tdf = new SimpleDateFormat("dd/M/YYYY");
             model.addRow(adRow);
         }
         tableStock.getColumnModel().getColumn(0).setHeaderValue("ITEM");
-        tableStock.getColumnModel().getColumn(1).setHeaderValue("STOCK QTY");        
+        tableStock.getColumnModel().getColumn(1).setHeaderValue("QOH");        
     }catch(SQLException e){
         e.getMessage();
     }
@@ -135,48 +135,48 @@ private void sortTable(){
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("PRINT RECEIPT");
+        jButton1.setText("View Receipt");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 80, 70));
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 120, 30));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("CHANGE:");
-        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 100, 150, 30));
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 150, 30));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("TOTAL AMOUNT:");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 20, 150, 30));
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 150, 30));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("AMOUNT PAID:");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 150, 30));
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 150, 30));
 
         lblTotalAmount.setFont(new java.awt.Font("Tahoma", 2, 14)); // NOI18N
         lblTotalAmount.setForeground(new java.awt.Color(255, 255, 255));
-        jPanel3.add(lblTotalAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, 150, 30));
+        jPanel3.add(lblTotalAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 150, 30));
 
         lblAmountPaid.setFont(new java.awt.Font("Tahoma", 2, 14)); // NOI18N
         lblAmountPaid.setForeground(new java.awt.Color(255, 255, 255));
-        jPanel3.add(lblAmountPaid, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, 150, 30));
+        jPanel3.add(lblAmountPaid, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 150, 30));
 
         lblChange.setFont(new java.awt.Font("Tahoma", 2, 14)); // NOI18N
         lblChange.setForeground(new java.awt.Color(255, 255, 255));
-        jPanel3.add(lblChange, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 100, 150, 30));
+        jPanel3.add(lblChange, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 100, 150, 30));
 
-        jButton2.setText("MAIN MENU");
+        jButton2.setText("Back To Main");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 80, 60));
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 110, 60));
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 480, 280));
 
@@ -184,7 +184,7 @@ private void sortTable(){
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         jPanel4.add(datePicker, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 180, 40));
 
-        jButton3.setText("GENERATE SALES");
+        jButton3.setText("View Sales Report");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -217,7 +217,7 @@ private void sortTable(){
     private void tableReceiptMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableReceiptMouseClicked
         int row = tableReceipt.getSelectedRow();
         int ba = tableReceipt.convertRowIndexToModel(row);
-        getTransactionId = (tableReceipt.getModel().getValueAt(ba, 0)).toString();
+        getTransactionId = (tableReceipt.getModel().getValueAt(ba, 1)).toString();
         String tableQuery = "SELECT * from tblReceipt where transactionId=?";
         
         try{

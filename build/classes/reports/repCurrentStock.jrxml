@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d53db69e-8195-485d-a77d-0e890a6af041">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="currentStock" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d53db69e-8195-485d-a77d-0e890a6af041">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -104,15 +104,12 @@
 	</style>
 	<subDataset name="New Dataset 1" uuid="f8fb80d8-2283-4f16-a2b6-b588846c0b57">
 		<queryString language="SQL">
-			<![CDATA[select * from tblProduct]]>
+			<![CDATA[select * from tblwrs_product]]>
 		</queryString>
-		<field name="productName" class="java.lang.String">
+		<field name="product_name" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="category" class="java.lang.String">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
-		<field name="stockOnHand" class="java.lang.Integer">
+		<field name="product_qoh" class="java.lang.Integer">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 		<group name="category">
@@ -121,32 +118,29 @@
 	</subDataset>
 	<subDataset name="New Dataset 2" uuid="a39c8933-6dba-46f6-8ba3-f0e2a22efce5">
 		<queryString language="SQL">
-			<![CDATA[select * from tblProduct]]>
+			<![CDATA[select * from tblwrs_product]]>
 		</queryString>
-		<field name="productName" class="java.lang.String">
+		<field name="product_name" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="unitPrice" class="java.lang.String">
+		<field name="product_price" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="stockOnHand" class="java.lang.Integer">
+		<field name="product_qoh" class="java.lang.Integer">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 	</subDataset>
 	<subDataset name="New Dataset 3" uuid="7ca779c0-6a44-4bba-9092-06d04ff1986e">
 		<queryString language="SQL">
-			<![CDATA[select * from tblProduct]]>
+			<![CDATA[select * from tblwrs_product]]>
 		</queryString>
-		<field name="productName" class="java.lang.String">
+		<field name="product_name" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="unitPrice" class="java.lang.String">
+		<field name="product_price" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="category" class="java.lang.String">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
-		<field name="stockOnHand" class="java.lang.Integer">
+		<field name="product_qoh" class="java.lang.Integer">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 		<group name="category">
@@ -157,27 +151,18 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[Select * from tblProduct order by category]]>
+		<![CDATA[Select * from tblwrs_product]]>
 	</queryString>
-	<field name="productId" class="java.lang.String">
+	<field name="product_id" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="productName" class="java.lang.String">
+	<field name="product_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="unitPrice" class="java.lang.String">
+	<field name="product_price" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="category" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="stockOnHand" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="minimumOrder" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="maximumOrder" class="java.lang.Integer">
+	<field name="product_qoh" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -235,14 +220,14 @@
 			<textField>
 				<reportElement x="283" y="0" width="269" height="16" uuid="b0176bb2-f02d-4bad-8070-2702698acdab"/>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{stockOnHand}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{product_qoh}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="Detail" x="2" y="1" width="258" height="15" uuid="676c1d7f-8c73-4513-9b6c-1c7313c77882"/>
 				<textElement>
 					<font fontName="Arial" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

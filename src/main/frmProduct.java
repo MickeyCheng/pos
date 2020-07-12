@@ -22,7 +22,6 @@ String getProductID;
         doConnect();
         clearTexts();
         lockTexts();
-        fillComboBox();
         fillTable();
         setLocationRelativeTo(null);
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
@@ -37,11 +36,10 @@ String getProductID;
     }
 private void listenSearch(){
     try{
-        String searchSQL = "Select * from tblProduct where productName like? OR productId like? OR category like?";
+        String searchSQL = "Select * from tblwrs_product where product_name like? OR product_id like?";
         pstmt = conn.prepareStatement(searchSQL);
         pstmt.setString(1,"%"+txtSearch.getText()+"%");
         pstmt.setString(2,"%"+txtSearch.getText()+"%");
-        pstmt.setString(3,"%"+txtSearch.getText()+"%");
         rs = pstmt.executeQuery();
         tableProduct.setModel(DbUtils.resultSetToTableModel(rs));
     }catch(SQLException e){
@@ -49,26 +47,24 @@ private void listenSearch(){
     }
 }
 private void sortTable(){
-    tableProduct.getColumnModel().getColumn(0).setHeaderValue("BARCODE");
-    tableProduct.getColumnModel().getColumn(1).setHeaderValue("ITEM NAME");
-    tableProduct.getColumnModel().getColumn(2).setHeaderValue("UNIT PRICE");
-    tableProduct.getColumnModel().getColumn(3).setHeaderValue("CATEGORY");
-    tableProduct.getColumnModel().getColumn(4).setHeaderValue("QTY");
-    tableProduct.getColumnModel().getColumn(5).setHeaderValue("MIN ORDER");
-    tableProduct.getColumnModel().getColumn(6).setHeaderValue("MAXIMUM ORDER");
+    tableProduct.getColumnModel().getColumn(0).setHeaderValue("ID");
+    tableProduct.getColumnModel().getColumn(1).setHeaderValue("NAME");
+    tableProduct.getColumnModel().getColumn(2).setHeaderValue("PRICE");
+    tableProduct.getColumnModel().getColumn(3).setHeaderValue("QOH");
+    tableProduct.getColumnModel().getColumn(4).setHeaderValue("MIN");
+    tableProduct.getColumnModel().getColumn(5).setHeaderValue("MAX");
     
     tableProduct.getColumnModel().getColumn(0).setPreferredWidth(50);
-    tableProduct.getColumnModel().getColumn(1).setPreferredWidth(250);
-    tableProduct.getColumnModel().getColumn(2).setPreferredWidth(100);
-    tableProduct.getColumnModel().getColumn(3).setPreferredWidth(150);
-    tableProduct.getColumnModel().getColumn(4).setPreferredWidth(75);
-    tableProduct.getColumnModel().getColumn(5).setPreferredWidth(75);
-    tableProduct.getColumnModel().getColumn(6).setPreferredWidth(75);
+    tableProduct.getColumnModel().getColumn(1).setPreferredWidth(150);
+    tableProduct.getColumnModel().getColumn(2).setPreferredWidth(50);
+    tableProduct.getColumnModel().getColumn(3).setPreferredWidth(50);
+    tableProduct.getColumnModel().getColumn(4).setPreferredWidth(50);
+    tableProduct.getColumnModel().getColumn(5).setPreferredWidth(50);
     tableProduct.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 }
 private void fillTable(){
     try{
-        String fillTable = "Select * from tblProduct";
+        String fillTable = "Select * from tblwrs_product";
         pstmt = conn.prepareStatement(fillTable);
         rs = pstmt.executeQuery();
         tableProduct.setModel(DbUtils.resultSetToTableModel(rs));
@@ -78,36 +74,23 @@ private void fillTable(){
         e.getMessage();
     }
 }    
-private void fillComboBox(){
-    cmbCategory.removeAllItems();
-    cmbCategory.addItem("Bread");
-    cmbCategory.addItem("Pastry");
-    cmbCategory.addItem("Store Items");
-    cmbCategory.addItem("Kitchen");
-    cmbCategory.addItem("Cake Items");
-    cmbCategory.addItem("Other");
-}    
+
 private void unlockTexts(){
     txtPrice.setEnabled(true);
     txtProductName.setEnabled(true);
-    txtProductId.setEnabled(true);
     txtStock.setEnabled(true);
-    cmbCategory.setEnabled(true);
     txtMax.setEnabled(true);
     txtMin.setEnabled(true);
 }    
 private void lockTexts(){
     txtPrice.setEnabled(false);
     txtProductName.setEnabled(false);
-    txtProductId.setEnabled(false);
     txtStock.setEnabled(false);
-    cmbCategory.setEnabled(false);
     txtMax.setEnabled(false);
     txtMin.setEnabled(false);
 }    
 private void clearTexts(){
     txtPrice.setText("");
-    txtProductId.setText("");
     txtStock.setText("");
     txtProductName.setText("");
     txtMax.setText("");
@@ -134,29 +117,25 @@ try{
         jScrollPane1 = new javax.swing.JScrollPane();
         tableProduct = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        btnDelete = new javax.swing.JButton();
-        btnAdd = new javax.swing.JButton();
-        btnEdit = new javax.swing.JButton();
-        btnCancel = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         txtSearch = new javax.swing.JTextField();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         txtPrice = new javax.swing.JTextField();
-        txtProductId = new javax.swing.JTextField();
         txtProductName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        cmbCategory = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
         txtStock = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txtMin = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtMax = new javax.swing.JTextField();
+        btnAdd = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -190,26 +169,62 @@ try{
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel3.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel3.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 230, 40));
 
-        btnDelete.setText("DELETE");
-        btnDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 70, 80));
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Search:");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 130, 50));
+
+        jPanel4.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 30, 390, 60));
+
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        txtPrice.setNextFocusableComponent(txtStock);
+        jPanel2.add(txtPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, 230, 50));
+
+        jPanel2.add(txtProductName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 230, 50));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Price:");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 130, 50));
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Min:");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 50, 70));
+
+        txtStock.setNextFocusableComponent(txtMin);
+        jPanel2.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 50, 50));
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Initial Stock:");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 130, 50));
+
+        txtMin.setNextFocusableComponent(txtMax);
+        jPanel2.add(txtMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 130, 110, 70));
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Max:");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 210, 50, 70));
+
+        txtMax.setNextFocusableComponent(btnSave);
+        jPanel2.add(txtMax, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, 110, 70));
 
         btnAdd.setText("ADD");
         btnAdd.setFocusCycleRoot(true);
-        btnAdd.setNextFocusableComponent(txtProductId);
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 70, 80));
+        jPanel2.add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, 70, 50));
 
         btnEdit.setText("EDIT");
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
@@ -217,10 +232,15 @@ try{
                 btnEditActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 70, 80));
+        jPanel2.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 300, 70, 50));
 
-        btnCancel.setText("CANCEL");
-        jPanel1.add(btnCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 70, 80));
+        btnDelete.setText("DELETE");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 300, 70, 50));
 
         btnSave.setText("SAVE");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -228,76 +248,17 @@ try{
                 btnSaveActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 70, 80));
+        jPanel2.add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 380, 70, 40));
 
-        jPanel4.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 60, 110, 460));
+        btnCancel.setText("CANCEL");
+        jPanel2.add(btnCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 380, 70, 40));
 
-        jPanel3.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel3.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 370, 40));
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Product Name:");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 130, 50));
 
-        jPanel4.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 30, 390, 60));
-
-        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Category:");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 130, 50));
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("PRODUCT ID:");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 130, 50));
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("PRODUCT NAME:");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, 50));
-
-        txtPrice.setNextFocusableComponent(txtStock);
-        jPanel2.add(txtPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 210, 230, 50));
-
-        txtProductId.setNextFocusableComponent(txtProductName);
-        jPanel2.add(txtProductId, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 230, 50));
-
-        txtProductName.setNextFocusableComponent(cmbCategory);
-        jPanel2.add(txtProductName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 230, 50));
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("PRICE:");
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 130, 50));
-
-        cmbCategory.setNextFocusableComponent(txtPrice);
-        jPanel2.add(cmbCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 150, 230, 50));
-
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("MIN:");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 270, 50, 70));
-
-        txtStock.setNextFocusableComponent(txtMin);
-        jPanel2.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 50, 50));
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("INITIAL STOCK:");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 130, 50));
-
-        txtMin.setNextFocusableComponent(txtMax);
-        jPanel2.add(txtMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 270, 110, 70));
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("MAX:");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 350, 50, 70));
-
-        txtMax.setNextFocusableComponent(btnSave);
-        jPanel2.add(txtMax, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 350, 110, 70));
-
-        jPanel4.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 90, 390, 430));
+        jPanel4.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 90, 480, 430));
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1130, 590));
 
@@ -344,33 +305,28 @@ try{
         edit = false;
         unlockTexts();
         clearTexts();
-        fillComboBox();
-        txtProductId.requestFocus();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         edit = true;
         add =false;
         unlockTexts();
-        fillComboBox();
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         
         if (add == true && edit ==false){
             try{
-                String insertTblProduct = "INSERT INTO tblProduct (productId,productName,unitPrice,category,stockOnHand,minimumOrder,maximumOrder) "
-                        + "values (?,?,?,?,?,?,?)";
-                pstmt = conn.prepareStatement(insertTblProduct);
-                pstmt.setString(1,txtProductId.getText());
-                pstmt.setString(2,txtProductName.getText());
-                pstmt.setString(3, txtPrice.getText());
-                pstmt.setString(4,cmbCategory.getSelectedItem().toString());
-                pstmt.setInt(5,Integer.valueOf(txtStock.getText()));
-                pstmt.setInt(6, Integer.valueOf(txtMin.getText()));
-                pstmt.setInt(7, Integer.valueOf(txtMax.getText()));
+                String insertQuery = "INSERT INTO tblwrs_product (product_name,product_price,product_qoh,product_min,product_max) "
+                        + "values (?,?,?,?,?)";
+                pstmt = conn.prepareStatement(insertQuery);
+                pstmt.setString(1,txtProductName.getText());
+                pstmt.setString(2, txtPrice.getText());
+                pstmt.setInt(3,Integer.valueOf(txtStock.getText()));
+                pstmt.setInt(4, Integer.valueOf(txtMin.getText()));
+                pstmt.setInt(5, Integer.valueOf(txtMax.getText()));
                 pstmt.execute();
-                JOptionPane.showMessageDialog(this, "PRODUCT ADDED");
+                JOptionPane.showMessageDialog(this, "Product Added");
                 pstmt.close();
                 fillTable();
                 clearTexts();
@@ -380,20 +336,17 @@ try{
             }
         }else if (add == false && edit == true){
             try{
-                String updateTblProduct = "UPDATE tblProduct set productId=?,productName=?,unitPrice=?,category=?,stockOnHand=?"
-                        + ",minimumOrder=?,maximumOrder=?"
-                        + " where productId=?";
-                pstmt = conn.prepareStatement(updateTblProduct);
-                pstmt.setString(1,txtProductId.getText());
-                pstmt.setString(2,txtProductName.getText());
-                pstmt.setString(3, txtPrice.getText());
-                pstmt.setString(4,cmbCategory.getSelectedItem().toString());
-                pstmt.setInt(5,Integer.valueOf(txtStock.getText()));
-                pstmt.setInt(6, Integer.valueOf(txtMin.getText()));
-                pstmt.setInt(7, Integer.valueOf(txtMax.getText()));                
-                pstmt.setString(8, getProductID);
+                String updateSQL = "UPDATE tblwrs_product set product_name=?,product_price=?,product_qoh=?,product_min=?,product_max=?"
+                        + " where product_id=?";
+                pstmt = conn.prepareStatement(updateSQL);
+                pstmt.setString(1,txtProductName.getText());
+                pstmt.setString(2, txtPrice.getText());
+                pstmt.setInt(3,Integer.valueOf(txtStock.getText()));
+                pstmt.setInt(4, Integer.valueOf(txtMin.getText()));
+                pstmt.setInt(5, Integer.valueOf(txtMax.getText()));                
+                pstmt.setString(6, getProductID);
                 pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(this, "PRODUCT EDITED");
+                JOptionPane.showMessageDialog(this, "Product Updated");
                 pstmt.close();
                 fillTable();
                 clearTexts();
@@ -410,21 +363,17 @@ try{
         int ba = tableProduct.convertRowIndexToModel(row);
         try{
             String tblClick = (tableProduct.getModel().getValueAt(ba, 0).toString());
-            String tableQuery = "Select * from tblProduct where productId=?";
+            String tableQuery = "Select * from tblwrs_product where product_id=?";
             pstmt = conn.prepareStatement(tableQuery);
             pstmt.setString(1, tblClick);
             rs = pstmt.executeQuery();
             if (rs.next()){
-                txtProductName.setText(rs.getString("productName"));
-                txtProductId.setText(rs.getString("productId"));
-                txtPrice.setText(rs.getString("unitPrice"));
-                txtStock.setText(String.valueOf(rs.getInt("stockOnHand")));
-                txtMin.setText(String.valueOf(rs.getInt("minimumOrder")));
-                txtMax.setText(String.valueOf(rs.getInt("maximumOrder")));
-                cmbCategory.removeAllItems();
-                Object getCategory = rs.getString("category");
-                cmbCategory.addItem(getCategory);
-                getProductID= rs.getString("productId");
+                txtProductName.setText(rs.getString("product_name"));
+                txtPrice.setText(rs.getString("product_price"));
+                txtStock.setText(String.valueOf(rs.getInt("product_qoh")));
+                txtMin.setText(String.valueOf(rs.getInt("product_min")));
+                txtMax.setText(String.valueOf(rs.getInt("product_max")));
+                getProductID= rs.getString("product_id");
             }
         }catch(SQLException e){
             e.getMessage();
@@ -454,8 +403,7 @@ try{
         int itemSelected = JOptionPane.showConfirmDialog(this, "DELETE RECORD?","DELETE",JOptionPane.YES_NO_OPTION);
         if (itemSelected==JOptionPane.YES_OPTION){
             try{
-                pstmt = conn.prepareStatement("DELETE FROM tblProduct where productId=?");
-                pstmt.setString(1,txtProductId.getText());
+                pstmt = conn.prepareStatement("DELETE FROM tblwrs_product where product_id=?");
                 pstmt.executeUpdate();
                 pstmt.close();
                 JOptionPane.showMessageDialog(this, "RECORD DELETED");
@@ -511,21 +459,18 @@ try{
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnSave;
-    private javax.swing.JComboBox cmbCategory;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -534,7 +479,6 @@ try{
     private javax.swing.JTextField txtMax;
     private javax.swing.JTextField txtMin;
     private javax.swing.JTextField txtPrice;
-    private javax.swing.JTextField txtProductId;
     private javax.swing.JTextField txtProductName;
     private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtStock;
