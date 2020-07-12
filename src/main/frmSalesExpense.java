@@ -34,23 +34,36 @@ SimpleDateFormat tdf = new SimpleDateFormat("dd/M/YYYY");
         initComponents();
         doConnect();
         fillTableSales();
+        fillTableExpense();
     }
     private void fillTableSales(){
         DefaultTableModel model = (DefaultTableModel)tblSales.getModel();
         model.setRowCount(0);
     try{
-        int i=0;
-        String fillStockSQL = "Select productName,quantity,bdPrice,totalAmount,date from tblreceipt";
+        String fillStockSQL = "Select productName,quantity,bdPrice,date from tblreceipt";
         pstmt = conn.prepareStatement(fillStockSQL);
         rs = pstmt.executeQuery();
         tblSales.setModel(DbUtils.resultSetToTableModel(rs));
-        
-        
         tblSales.getColumnModel().getColumn(0).setHeaderValue("Name");
         tblSales.getColumnModel().getColumn(1).setHeaderValue("Qty");  
         tblSales.getColumnModel().getColumn(2).setHeaderValue("Price");  
-        tblSales.getColumnModel().getColumn(3).setHeaderValue("Amount");  
-        tblSales.getColumnModel().getColumn(4).setHeaderValue("Date");        
+        tblSales.getColumnModel().getColumn(3).setHeaderValue("Date");        
+    }catch(SQLException e){
+        JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+    }
+    private void fillTableExpense(){
+        DefaultTableModel model = (DefaultTableModel)tblExpense.getModel();
+        model.setRowCount(0);
+    try{
+        String fillStockSQL = "Select expense_name,expense_amount,expense_status, expense_date from tblexpense";
+        pstmt = conn.prepareStatement(fillStockSQL);
+        rs = pstmt.executeQuery();
+        tblExpense.setModel(DbUtils.resultSetToTableModel(rs));
+        tblExpense.getColumnModel().getColumn(0).setHeaderValue("Name");
+        tblExpense.getColumnModel().getColumn(1).setHeaderValue("Amount");  
+        tblExpense.getColumnModel().getColumn(2).setHeaderValue("Status");  
+        tblExpense.getColumnModel().getColumn(3).setHeaderValue("Date");        
     }catch(SQLException e){
         JOptionPane.showMessageDialog(this, e.getMessage());
     }
@@ -258,16 +271,15 @@ private void sortTable(){
         DefaultTableModel model = (DefaultTableModel)tblSales.getModel();
         model.setRowCount(0);
     try{
-        String fillStockSQL = "Select productName,quantity,bdPrice,totalAmount,date from tblreceipt where date=?";
+        String fillStockSQL = "Select productName,quantity,bdPrice,date from tblreceipt where date=?";
         pstmt = conn.prepareStatement(fillStockSQL);
         pstmt.setString(1, tdf.format(datePicker.getDate()));
         rs = pstmt.executeQuery();
         tblSales.setModel(DbUtils.resultSetToTableModel(rs));
         tblSales.getColumnModel().getColumn(0).setHeaderValue("Name");
         tblSales.getColumnModel().getColumn(1).setHeaderValue("Qty");  
-        tblSales.getColumnModel().getColumn(2).setHeaderValue("Price");  
-        tblSales.getColumnModel().getColumn(3).setHeaderValue("Amount");  
-        tblSales.getColumnModel().getColumn(4).setHeaderValue("Date");  
+        tblSales.getColumnModel().getColumn(2).setHeaderValue("Price");   
+        tblSales.getColumnModel().getColumn(3).setHeaderValue("Date");  
        //get sum
         double sumSales = 0;
         for(int i = 0; i < tblSales.getRowCount(); i++)

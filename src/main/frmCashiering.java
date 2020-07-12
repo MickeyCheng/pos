@@ -767,6 +767,11 @@ private void clearTexts(){
 }
     private void btnCashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCashActionPerformed
         double getAmtPaid, getTotalAmt, showChange;       
+        
+        if (tableInvoice.getRowCount() == 0){
+            JOptionPane.showMessageDialog(null, "No products entered", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
         if( txtAmountPaid.getText().equals("") || txtAmountPaid.getText().equals("0")){
             JOptionPane.showMessageDialog(null, "ENTER AMOUNT PAID", "NO AMOUNT ENTERED", JOptionPane.ERROR_MESSAGE);
         }else{
