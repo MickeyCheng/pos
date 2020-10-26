@@ -65,7 +65,7 @@ String retrieveProductName;
     
 private void fillProductTable(){
     try{
-        String fillTable = "Select product_id,product_name,product_price from tblwrs_product";
+        String fillTable = "Select product_id,product_name,product_price,product_qoh from tblwrs_product";
         pstmt = conn.prepareStatement(fillTable);
         rs = pstmt.executeQuery();
         tableProduct.setModel(DbUtils.resultSetToTableModel(rs));
@@ -79,10 +79,12 @@ private void sortProductTable(){
     tableProduct.getColumnModel().getColumn(0).setHeaderValue("ID");
     tableProduct.getColumnModel().getColumn(1).setHeaderValue("NAME");
     tableProduct.getColumnModel().getColumn(2).setHeaderValue("PRICE");
+    tableProduct.getColumnModel().getColumn(3).setHeaderValue("QOH");
     
     tableProduct.getColumnModel().getColumn(0).setPreferredWidth(50);
     tableProduct.getColumnModel().getColumn(1).setPreferredWidth(150);
     tableProduct.getColumnModel().getColumn(2).setPreferredWidth(50);
+    tableProduct.getColumnModel().getColumn(3).setPreferredWidth(50);
 }
 
 private void sortTable(){
@@ -97,7 +99,7 @@ private void sortTable(){
 
 private void listenSearch(){
  try{
-        String searchSQL = "Select product_id,product_name,product_price from tblwrs_product where product_name like? OR product_id like?";
+        String searchSQL = "Select product_id,product_name,product_price,product_qoh from tblwrs_product where product_name like? OR product_id like?";
         pstmt = conn.prepareStatement(searchSQL);
         pstmt.setString(1,"%"+txtSearchProduct.getText()+"%");
         pstmt.setString(2,"%"+txtSearchProduct.getText()+"%");
