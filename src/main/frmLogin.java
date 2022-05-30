@@ -22,7 +22,7 @@ public static String showUserName;
 private void doConnect(){
 try{
     Class.forName("com.mysql.jdbc.Driver");
-    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbebpos","root","rootroot");
+    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbebpos","root","root");
 }catch(SQLException | ClassNotFoundException e){
     JOptionPane.showMessageDialog(this, e.getMessage());
 }
